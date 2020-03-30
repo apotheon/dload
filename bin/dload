@@ -9,7 +9,7 @@ def dedupe_name oldname
   newname = oldname
 
   while File.exist? newname do
-    newname = prefix.concat '.', oldname
+    newname = prefix + '.' + oldname
     prefix.next!
   end
 
