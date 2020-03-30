@@ -38,6 +38,7 @@ if $0.eql? __FILE__
         end
 
         system "curl -o #{fname} #{arg}"
+        puts "filename: #{fname}"
       end
     end
   end
