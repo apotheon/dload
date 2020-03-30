@@ -1,7 +1,19 @@
 #!/usr/bin/env ruby
 
-def scorename filename
+def score_name filename
   filename.sub(/.*\//, '').gsub(/%../, '_')
+end
+
+def dedupe_name oldname
+  prefix = 'a'
+  newname = oldname
+
+  while File.exist? newname do
+    newname = prefix.concat '.', oldname
+    prefix.next!
+  end
+
+  newname
 end
 
 if $0.eql? __FILE__
@@ -17,8 +29,9 @@ if $0.eql? __FILE__
     puts '    the URI with underscores.'
   else
     ARGV.each do |arg|
-      arg.scorename(arg).tap do |fname|
-        while File.exist? fname do
+      String.new do |fname|
+        score_name(arg).tap do |original|
+          fname = dedupe_name original
         end
       end
     end
