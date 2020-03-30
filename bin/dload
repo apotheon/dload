@@ -17,19 +17,22 @@ def dedupe_name oldname
 end
 
 if $0.eql? __FILE__
-  if ARGV.first.nil? or ARGV.first.match? /^(-h|-?-help|help)$/
-    puts "USAGE: $0 <URI>"
+  if ARGV.first.nil? or ARGV.first.match? /^(-h|-?-help)$/
+    puts "USAGE: [-h|--help] $0 <URI>"
     puts
     puts '    Download the file at URI.  If a file with that name already'
     puts '    exists, prepend a short alphanumeric code to the filename so it'
     puts '    does not clobber the existing file.  "Short" is relative,'
     puts '    depending on the number of similarly-named files you have in the'
     puts '    download destination directory.  For the convenience of many'
-    puts '    terminal environments, dload also replaces % character entities in'
-    puts '    the URI with underscores.'
+    puts '    terminal environments, dload also replaces % character entities'
+    puts '    in the URI with underscores.'
+    puts
+    puts '    With a help option (-h or --help) as the first argument, ignore'
+    puts '    following arguments and print this help message to stdout.'
   else
     ARGV.each do |arg|
-      String.new do |fname|
+      String.new.tap do |fname|
         score_name(arg).tap do |original|
           fname = dedupe_name original
         end
