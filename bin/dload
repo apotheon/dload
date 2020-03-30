@@ -36,6 +36,8 @@ if $0.eql? __FILE__
         score_name(arg).tap do |original|
           fname = dedupe_name original
         end
+
+        system "curl -o #{fname} #{arg}"
       end
     end
   end
