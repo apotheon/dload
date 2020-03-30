@@ -1,38 +1,26 @@
 #!/usr/bin/env ruby
 
-if ARGV.first.nil? or ARGV.first.match? /^(-h|-?-help|help)$/
-  puts "USAGE: $0 <URI>"
-  puts
-  puts '    Download the file at URI.  If a file with that name already'
-  puts '    exists, prepend a short alphanumeric code to the filename so it'
-  puts '    does not clobber the existing file.  "Short" is relative,'
-  puts '    depending on the number of similarly-named files you have in the'
-  puts '    download destination directory.  For the convenience of many'
-  puts '    terminal environments, dload also replaces % character entities in'
-  puts '    the URI with underscores.'
-else
-  ARGV.each do |arg|
-    arg.sub(/.*\//, '').gsub(/%../, '_').tap do |fname|
+def scorename filename
+  filename.sub(/.*\//, '').gsub(/%../, '_')
+end
+
+if $0.eql? __FILE__
+  if ARGV.first.nil? or ARGV.first.match? /^(-h|-?-help|help)$/
+    puts "USAGE: $0 <URI>"
+    puts
+    puts '    Download the file at URI.  If a file with that name already'
+    puts '    exists, prepend a short alphanumeric code to the filename so it'
+    puts '    does not clobber the existing file.  "Short" is relative,'
+    puts '    depending on the number of similarly-named files you have in the'
+    puts '    download destination directory.  For the convenience of many'
+    puts '    terminal environments, dload also replaces % character entities in'
+    puts '    the URI with underscores.'
+  else
+    ARGV.each do |arg|
+      arg.scorename(arg).tap do |fname|
+        while File.exist? fname do
+        end
+      end
     end
   end
 end
-
-=begin
-#!/bin/sh
-
-for arg in "$@"; do
-  origname=`echo $arg | sed 's|.*/||' | sed 's/%../_/g'`
-  fname=$origname
-
-  while [ -f $fname ]; do
-    fname="`nanotime`.$origname"
-  done
-
-  curl -o $fname $1
-  if [ $? -eq 0 ]; then
-    echo "success: $fname"
-  else
-    echo "failure: $fname failed"
-  fi
-done
-=end
